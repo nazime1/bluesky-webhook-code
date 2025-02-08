@@ -1,0 +1,5 @@
+atproto==0.0.58
+datetime
+httpx==0.27.2
+regex==2024.9.11
+python-dateutil==2.8.2
