@@ -15,3 +15,4 @@ for feed_view in profile_feed.feed:
         
 for feed_view in feed2:
     feed_view.post.uri = re.sub(r'at://did:plc:your-uri/app.bsky.feed.post/', r'https://bsky.app/profile/did:plc:your-uri/post/', feed_view.post.uri)
+    feed_view.post.uri = re.sub(r'did:plc:cargf4lbxd6cg25d637gt2c3', r'handle.', feed_view.post.uri)
