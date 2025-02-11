@@ -1,5 +1,6 @@
 # Bluesky Webhook intended for Discord
 All the bots for Discord run awfully slow or are paid so I coded this in a few hours. I might improve on it someday (like make embeds look nicer) but for now it's functional and that's what matters.
+Shoutout to [Adsalor](https://github.com/adsalor) for helping to fix some parts of the code and clean it up :)
 # How to Run
 1. Clone this repository.
 2. Run `pip install -r requirements.txt`.
