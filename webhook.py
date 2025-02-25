@@ -11,6 +11,8 @@ feed2 = []
 quotefeed = {}
 imagefeed = []
 imagequotefeed = {}
+videofeed = []
+giffeed = []
 for feed_view in profile_feed.feed:
     post_url = re.sub(r'at://did:plc:your-uri/app.bsky.feed.post/', r'https://bsky.app/profile/did:plc:your-uri/post/', feed_view.post.uri)
     post_url = re.sub(r'did:plc:your-uri', r'handle', post_url)    
@@ -25,7 +27,13 @@ for feed_view in profile_feed.feed:
                 imagequotefeed.update({(quoted_text, display_name) : feed_view})
             elif hasattr(feed_view.post.record.embed, 'images'):
                 feed_view.post.uri = post_url
-                imagefeed.append(feed_view)            
+                imagefeed.append(feed_view)
+            elif hasattr(feed_view.post.record.embed, 'video'):
+                feed_view.post.uri = post_url
+                videofeed.append(feed_view)
+            elif hasattr(feed_view.post.record.embed, 'external'):
+                feed_view.post.uri = post_url
+                giffeed.append(feed_view)
             elif hasattr(feed_view.post.record.embed, 'record'):
                 post_fetched = client.get_posts([feed_view.post.record.embed.record.uri])
                 display_name = post_fetched.posts[0].author.display_name 
