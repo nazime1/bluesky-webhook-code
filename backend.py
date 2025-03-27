@@ -1,7 +1,7 @@
 import httpx
 import json
 import re
-from webhook import feed2, quotefeed, imagefeed, imagequotefeed, videofeed, giffeed
+from webhook import feed2, quotefeed, imagefeed, imagequotefeed, videofeed, giffeed, linkfeed
 from dateutil import parser
 from zoneinfo import ZoneInfo
 import m3u8_To_MP4
@@ -17,7 +17,7 @@ if len(feed2) > 0:
             data={"payload_json": json.dumps({
                 "embeds": [{
                     "author": {
-                        "name": "your-name",
+                        "name": feed_post.post.author.display_name,
                         "url": "handle",
                         "icon_url": feed_post.post.author.avatar
                     },
@@ -46,7 +46,7 @@ if len(quotefeed) > 0:
             data={"payload_json": json.dumps({
                 "embeds": [{
                     "author": {
-                        "name": "your-name",
+                        "name": feed_post.post.author.display_name,
                         "url": "handle",
                         "icon_url": feed_post.post.author.avatar
                     },
@@ -71,7 +71,7 @@ if len(imagefeed) > 0:
         json_string = json.dumps({
             "embeds": [{
                 "author": {
-                    "name": "your-name",
+                    "name": feed_post.post.author.display_name,
                     "url": "handle",
                     "icon_url": feed_post.post.author.avatar
                 },
@@ -110,7 +110,7 @@ if len(imagequotefeed) > 0:
         json_string = json.dumps({
                 "embeds": [{
                     "author": {
-                        "name": "your-name",
+                        "name": feed_post.post.author.display_name,
                         "url": "handle",
                         "icon_url": feed_post.post.author.avatar
                     },
@@ -149,7 +149,7 @@ if len(videofeed) > 0:
             json_string = json.dumps({
                 "embeds": [{
                     "author": {
-                        "name": "your-name",
+                        "name": feed_post.post.author.display_name,
                         "url": "handle",
                         "icon_url": feed_post.post.author.avatar
                     },
@@ -178,7 +178,7 @@ if len(giffeed) > 0:
         json_string = json.dumps({
                 "embeds": [{
                     "author": {
-                        "name": "your-name",
+                        "name": feed_post.post.author.display_name,
                         "url": "handle",
                         "icon_url": feed_post.post.author.avatar
                     },
@@ -200,3 +200,32 @@ if len(giffeed) > 0:
             data={"payload_json": json_string})
         response.raise_for_status()
 
+if len(linkfeed) > 0:
+    for feed_post in giffeed:
+        post_time = parser.isoparse(feed_post.post.record.created_at).astimezone(est)
+        time_string = "Posted on {:%B %d, %Y} at {:%H:%M}".format(post_time, post_time)
+        json_string = json.dumps({
+                "embeds": [{
+                    "author": {
+                        "name": feed_post.post.author.display_name,
+                        "url": "handle",
+                        "icon_url": feed_post.post.author.avatar
+                    },
+                    "title": "New Bluesky Post!",
+                    "color": 1147902,
+                    "url": feed_post.post.uri,
+                    "description": feed_post.post.record.text,
+                    "footer": {
+                        "text": time_string,
+                        "icon_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Bluesky_Logo.svg/1200px-Bluesky_Logo.svg.png" 
+                        }
+                    }
+                    {
+                        "url": feed_post.post.embed.external.uri,
+                        "description": feed_post.post.embed.external.title
+                    }]
+                })
+        response=httpx.post(
+            r"https://discord.com/api/webhooks/1337872985926795316/vTCP0xC5rA0-Z8fD9j_yr79Dzs_TN-gagj0do0qLY07vQ_eZZhcYMf9qgw-cc_5WtuoF",
+            data={"payload_json": json_string})
+        response.raise_for_status()
